@@ -8,6 +8,9 @@ class HomePageModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
+  // State field(s) for SearchBar widget.
+  TextEditingController? searchBarController;
+  String? Function(BuildContext, String?)? searchBarControllerValidator;
 
   /// Initialization and disposal methods.
 
@@ -15,6 +18,7 @@ class HomePageModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
+    searchBarController?.dispose();
   }
 
   /// Action blocks are added here.
