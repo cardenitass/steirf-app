@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "206822707826",
+    "project_id": "steirfappbd",
+    "storage_bucket": "steirfappbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206822707826:android:18695f180015b58b2da8eb",
+        "android_client_info": {
+          "package_name": "com.ftdigital.steirfapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206822707826-72gs1uijfao3atskin72f3k267jq1gr5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ftdigital.steirfapp",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "206822707826-p0n2cistnhj6bpouq1bpbgkb7bf37m9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmMsW4lIbkQYHMpleXQY9ioRKolJiJlAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206822707826-p0n2cistnhj6bpouq1bpbgkb7bf37m9h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "206822707826-kse54migmkgr6622i2fde276mdfq9rjm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ftdigital.steirfapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
