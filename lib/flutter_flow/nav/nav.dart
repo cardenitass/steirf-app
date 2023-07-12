@@ -70,6 +70,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'UploadProduct',
           path: '/uploadProduct',
           builder: (context, params) => UploadProductWidget(),
+        ),
+        FFRoute(
+          name: 'Favorites',
+          path: '/favorites',
+          builder: (context, params) => FavoritesWidget(),
+        ),
+        FFRoute(
+          name: 'editProfile',
+          path: '/editProfile',
+          builder: (context, params) => EditProfileWidget(),
+        ),
+        FFRoute(
+          name: 'ForgotPassword',
+          path: '/forgotPassword',
+          builder: (context, params) => ForgotPasswordWidget(),
+        ),
+        FFRoute(
+          name: 'ForgotPasswordCode',
+          path: '/forgotPasswordCode',
+          builder: (context, params) => ForgotPasswordCodeWidget(),
+        ),
+        FFRoute(
+          name: 'ConfirmPassword',
+          path: '/confirmPassword',
+          builder: (context, params) => ConfirmPasswordWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

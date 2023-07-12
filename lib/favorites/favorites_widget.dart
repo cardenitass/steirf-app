@@ -1,28 +1,27 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'package:styled_divider/styled_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'home_page_model.dart';
-export 'home_page_model.dart';
+import 'favorites_model.dart';
+export 'favorites_model.dart';
 
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key? key}) : super(key: key);
+class FavoritesWidget extends StatefulWidget {
+  const FavoritesWidget({Key? key}) : super(key: key);
 
   @override
-  _HomePageWidgetState createState() => _HomePageWidgetState();
+  _FavoritesWidgetState createState() => _FavoritesWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
-  late HomePageModel _model;
+class _FavoritesWidgetState extends State<FavoritesWidget> {
+  late FavoritesModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomePageModel());
+    _model = createModel(context, () => FavoritesModel());
 
     _model.searchBarController ??= TextEditingController();
   }
@@ -110,7 +109,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              context.pushNamed('Profile');
+                              scaffoldKey.currentState!.openDrawer();
                             },
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 0.13,
@@ -146,7 +145,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         autofillHints: [AutofillHints.email],
                         obscureText: false,
                         decoration: InputDecoration(
-                          labelText: 'Explora la galería...',
+                          labelText: 'Busca entre tus favoritos...',
                           labelStyle: FlutterFlowTheme.of(context).labelLarge,
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -199,49 +198,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ],
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 15.0, 10.0, 5.0),
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 15.0, 0.0, 5.0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, -1.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 1.0, 0.0),
-                        child: Text(
-                          'Colecciones destacadas',
-                          style: FlutterFlowTheme.of(context).bodyMedium,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                    child: StyledVerticalDivider(
-                      thickness: 1.0,
-                      color: Colors.transparent,
-                      lineStyle: DividerLineStyle.dashdotted,
-                    ),
-                  ),
-                  Flexible(
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, -1.0),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          context.pushNamed('Favorites');
-                        },
-                        child: Text(
-                          'Favoritos ❤️',
-                          style: FlutterFlowTheme.of(context).bodyMedium,
-                        ),
-                      ),
-                    ),
+                  Text(
+                    'Colecciones favoritas',
+                    style: FlutterFlowTheme.of(context).bodyMedium,
                   ),
                 ],
               ),
@@ -351,8 +315,101 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0x00FFFFFF),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.network(
+                                                      'https://picsum.photos/seed/649/600',
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 1.0),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              height: MediaQuery.sizeOf(context).height * 0.03,
+                              decoration: BoxDecoration(
+                                color: Color(0xB6262626),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Text(
+                                      'Autor',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(1.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
                                         Icon(
-                                          Icons.favorite_border,
+                                          Icons.favorite,
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
@@ -454,8 +511,101 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0x00FFFFFF),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.network(
+                                                      'https://picsum.photos/seed/649/600',
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 1.0),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              height: MediaQuery.sizeOf(context).height * 0.03,
+                              decoration: BoxDecoration(
+                                color: Color(0xB6262626),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Text(
+                                      'Autor',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(1.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
                                         Icon(
-                                          Icons.favorite_border,
+                                          Icons.favorite,
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
@@ -557,11 +707,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -657,217 +802,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       children: [
                                         Icon(
                                           Icons.favorite,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0x00FFFFFF),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, -1.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    child: Image.network(
-                                                      'https://picsum.photos/seed/649/600',
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 1.0),
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: MediaQuery.sizeOf(context).height * 0.03,
-                              decoration: BoxDecoration(
-                                color: Color(0xB6262626),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Text(
-                                      'Autor',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(1.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.favorite,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0x00FFFFFF),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, -1.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    child: Image.network(
-                                                      'https://picsum.photos/seed/649/600',
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 1.0),
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: MediaQuery.sizeOf(context).height * 0.03,
-                              decoration: BoxDecoration(
-                                color: Color(0xB6262626),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Text(
-                                      'Autor',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(1.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.favorite,
-                                          color: Color(0xFFFF0000),
-                                          size: 24.0,
-                                        ),
-                                        Icon(
-                                          Icons.favorite_border,
                                           color: Color(0xFFFF0000),
                                           size: 24.0,
                                         ),
