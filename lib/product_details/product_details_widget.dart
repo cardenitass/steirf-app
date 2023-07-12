@@ -421,7 +421,7 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget>
                     onPressed: () {
                       print('Button pressed ...');
                     },
-                    text: 'Agregar al Carrito',
+                    text: 'Continuar',
                     options: FFButtonOptions(
                       width: double.infinity,
                       height: 60.0,
