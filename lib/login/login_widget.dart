@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -290,32 +291,61 @@ class _LoginWidgetState extends State<LoginWidget>
                       child: Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                        child: FFButtonWidget(
-                          onPressed: () {
-                            print('BtnLogin pressed ...');
-                          },
-                          text: 'Iniciar Sesión',
-                          options: FFButtonOptions(
-                            width: 230.0,
-                            height: 52.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).sGBUSGreen,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
+                        child: FutureBuilder<ApiCallResponse>(
+                          future: SteirfAuthGroup.loginCall.call(),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  child: CircularProgressIndicator(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
-                            elevation: 3.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
+                              );
+                            }
+                            final btnLoginLoginResponse = snapshot.data!;
+                            return FFButtonWidget(
+                              onPressed: () async {
+                                _model.apiResult2w0 =
+                                    await SteirfAuthGroup.loginCall.call(
+                                  email: _model.emailAddressController.text,
+                                  password: _model.passwordController.text,
+                                );
+                                if ((_model.apiResult2w0?.succeeded ?? true)) {
+                                  context.pushNamed('HomePage');
+                                } else {
+                                  context.pushNamed('Login');
+                                }
+
+                                setState(() {});
+                              },
+                              text: 'Iniciar Sesión',
+                              options: FFButtonOptions(
+                                width: 230.0,
+                                height: 52.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).sGBUSGreen,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Readex Pro',
+                                      color: Colors.white,
+                                    ),
+                                elevation: 3.0,
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -325,8 +355,8 @@ class _LoginWidgetState extends State<LoginWidget>
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
+                          onPressed: () async {
+                            context.pushNamed('ForgotPassword');
                           },
                           text: 'Olvidé la contraseña',
                           options: FFButtonOptions(

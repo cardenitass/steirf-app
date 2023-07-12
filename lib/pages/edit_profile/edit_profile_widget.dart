@@ -9,19 +9,19 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'profile_model.dart';
-export 'profile_model.dart';
+import 'edit_profile_model.dart';
+export 'edit_profile_model.dart';
 
-class ProfileWidget extends StatefulWidget {
-  const ProfileWidget({Key? key}) : super(key: key);
+class EditProfileWidget extends StatefulWidget {
+  const EditProfileWidget({Key? key}) : super(key: key);
 
   @override
-  _ProfileWidgetState createState() => _ProfileWidgetState();
+  _EditProfileWidgetState createState() => _EditProfileWidgetState();
 }
 
-class _ProfileWidgetState extends State<ProfileWidget>
+class _EditProfileWidgetState extends State<EditProfileWidget>
     with TickerProviderStateMixin {
-  late ProfileModel _model;
+  late EditProfileModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -51,7 +51,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ProfileModel());
+    _model = createModel(context, () => EditProfileModel());
 
     setupAnimations(
       animationsMap.values.where((anim) =>
@@ -254,19 +254,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
                       Expanded(
                         child: Align(
                           alignment: AlignmentDirectional(0.9, 0.0),
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              context.pushNamed('editProfile');
-                            },
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 18.0,
-                            ),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 18.0,
                           ),
                         ),
                       ),
@@ -440,10 +431,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                 child: FFButtonWidget(
-                  onPressed: () async {
-                    context.pushNamed('Login');
+                  onPressed: () {
+                    print('BtnLogout pressed ...');
                   },
-                  text: 'Cerrar Sesión',
+                  text: 'Guardar',
                   options: FFButtonOptions(
                     width: 150.0,
                     height: 44.0,
