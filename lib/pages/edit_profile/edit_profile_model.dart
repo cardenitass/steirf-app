@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +13,18 @@ class EditProfileModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
+  // State field(s) for name widget.
+  TextEditingController? nameController;
+  String? Function(BuildContext, String?)? nameControllerValidator;
+  // State field(s) for email widget.
+  TextEditingController? emailController;
+  String? Function(BuildContext, String?)? emailControllerValidator;
+  // State field(s) for password widget.
+  TextEditingController? passwordController;
+  String? Function(BuildContext, String?)? passwordControllerValidator;
+  // State field(s) for number widget.
+  TextEditingController? numberController;
+  String? Function(BuildContext, String?)? numberControllerValidator;
 
   /// Initialization and disposal methods.
 
@@ -21,6 +32,10 @@ class EditProfileModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
+    nameController?.dispose();
+    emailController?.dispose();
+    passwordController?.dispose();
+    numberController?.dispose();
   }
 
   /// Action blocks are added here.
