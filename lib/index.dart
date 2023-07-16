@@ -12,3 +12,4 @@ export '/forgot_password_code/forgot_password_code_widget.dart'
     show ForgotPasswordCodeWidget;
 export '/confirm_password/confirm_password_widget.dart'
     show ConfirmPasswordWidget;
+export '/products/products_widget.dart' show ProductsWidget;
