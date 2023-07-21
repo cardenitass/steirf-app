@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -147,7 +148,7 @@ class _ForgotPasswordCodeWidgetState extends State<ForgotPasswordCodeWidget>
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
-                                scaffoldKey.currentState!.openDrawer();
+                                context.pushNamed('HomePage');
                               },
                               child: Container(
                                 width: MediaQuery.sizeOf(context).width * 0.24,
@@ -198,6 +199,22 @@ class _ForgotPasswordCodeWidgetState extends State<ForgotPasswordCodeWidget>
                           width: double.infinity,
                           child: TextFormField(
                             controller: _model.emailAddressController,
+                            onFieldSubmitted: (_) async {
+                              if (_model.emailAddressController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Email required!',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              await authManager.resetPassword(
+                                email: _model.emailAddressController.text,
+                                context: context,
+                              );
+                            },
                             autofocus: true,
                             autofillHints: [AutofillHints.email],
                             obscureText: false,

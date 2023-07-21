@@ -61,6 +61,16 @@ class ProductsRecord extends FirestoreRecord {
   bool get favorite => _favorite ?? false;
   bool hasFavorite() => _favorite != null;
 
+  // "favs" field.
+  List<DocumentReference>? _favs;
+  List<DocumentReference> get favs => _favs ?? const [];
+  bool hasFavs() => _favs != null;
+
+  // "image" field.
+  String? _image;
+  String get image => _image ?? '';
+  bool hasImage() => _image != null;
+
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _description = snapshotData['description'] as String?;
@@ -71,6 +81,8 @@ class ProductsRecord extends FirestoreRecord {
     _category = snapshotData['category'] as DocumentReference?;
     _user = snapshotData['user'] as DocumentReference?;
     _favorite = snapshotData['favorite'] as bool?;
+    _favs = getDataList(snapshotData['favs']);
+    _image = snapshotData['image'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -116,6 +128,7 @@ Map<String, dynamic> createProductsRecordData({
   DocumentReference? category,
   DocumentReference? user,
   bool? favorite,
+  String? image,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -127,6 +140,7 @@ Map<String, dynamic> createProductsRecordData({
       'category': category,
       'user': user,
       'favorite': favorite,
+      'image': image,
     }.withoutNulls,
   );
 
@@ -147,7 +161,9 @@ class ProductsRecordDocumentEquality implements Equality<ProductsRecord> {
         listEquality.equals(e1?.imgPath, e2?.imgPath) &&
         e1?.category == e2?.category &&
         e1?.user == e2?.user &&
-        e1?.favorite == e2?.favorite;
+        e1?.favorite == e2?.favorite &&
+        listEquality.equals(e1?.favs, e2?.favs) &&
+        e1?.image == e2?.image;
   }
 
   @override
@@ -160,7 +176,9 @@ class ProductsRecordDocumentEquality implements Equality<ProductsRecord> {
         e?.imgPath,
         e?.category,
         e?.user,
-        e?.favorite
+        e?.favorite,
+        e?.favs,
+        e?.image
       ]);
 
   @override
