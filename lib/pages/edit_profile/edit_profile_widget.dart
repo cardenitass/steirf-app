@@ -1,8 +1,11 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -52,10 +55,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
     super.initState();
     _model = createModel(context, () => EditProfileModel());
 
-    _model.nameController ??= TextEditingController();
-    _model.emailController ??= TextEditingController();
-    _model.passwordController ??= TextEditingController();
-    _model.numberController ??= TextEditingController();
+    _model.nameController ??=
+        TextEditingController(text: currentUserDisplayName);
+    _model.emailController ??= TextEditingController(text: currentUserEmail);
+    _model.passwordController ??= TextEditingController(
+        text: valueOrDefault(currentUserDocument?.password, ''));
+    _model.numberController ??= TextEditingController(text: currentPhoneNumber);
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||
@@ -118,16 +123,17 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               4.0, 4.0, 4.0, 4.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: CachedNetworkImage(
-                              fadeInDuration: Duration(milliseconds: 500),
-                              fadeOutDuration: Duration(milliseconds: 500),
-                              imageUrl:
-                                  'https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTZ8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
+                          child: AuthUserStreamWidget(
+                            builder: (context) => ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: CachedNetworkImage(
+                                fadeInDuration: Duration(milliseconds: 500),
+                                fadeOutDuration: Duration(milliseconds: 500),
+                                imageUrl: currentUserPhoto,
+                                width: 100.0,
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -139,9 +145,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
-              child: Text(
-                'Andrew D.',
-                style: FlutterFlowTheme.of(context).headlineLarge,
+              child: AuthUserStreamWidget(
+                builder: (context) => Text(
+                  currentUserDisplayName,
+                  style: FlutterFlowTheme.of(context).headlineLarge,
+                ),
               ),
             ),
             Padding(
@@ -151,7 +159,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'andrew@gmail.com',
+                    currentUserEmail,
                     style: FlutterFlowTheme.of(context).bodyMedium,
                   ),
                   InkWell(
@@ -180,45 +188,48 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
-              child: TextFormField(
-                controller: _model.nameController,
-                autofocus: true,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'Nombre',
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium,
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 2.0,
+              child: AuthUserStreamWidget(
+                builder: (context) => TextFormField(
+                  controller: _model.nameController,
+                  autofocus: true,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Nombre',
+                    labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                    hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primary,
-                      width: 2.0,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                  validator:
+                      _model.nameControllerValidator.asValidator(context),
                 ),
-                style: FlutterFlowTheme.of(context).bodyMedium,
-                validator: _model.nameControllerValidator.asValidator(context),
               ),
             ),
             Padding(
@@ -266,121 +277,155 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
-              child: TextFormField(
-                controller: _model.passwordController,
-                autofocus: true,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'Contraseña',
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium,
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 2.0,
+              child: AuthUserStreamWidget(
+                builder: (context) => TextFormField(
+                  controller: _model.passwordController,
+                  autofocus: true,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                    hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primary,
-                      width: 2.0,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                  validator:
+                      _model.passwordControllerValidator.asValidator(context),
                 ),
-                style: FlutterFlowTheme.of(context).bodyMedium,
-                validator:
-                    _model.passwordControllerValidator.asValidator(context),
               ),
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
-              child: TextFormField(
-                controller: _model.numberController,
-                autofocus: true,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'Numero',
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium,
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 2.0,
+              child: AuthUserStreamWidget(
+                builder: (context) => TextFormField(
+                  controller: _model.numberController,
+                  autofocus: true,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Numero',
+                    labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                    hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primary,
-                      width: 2.0,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                  validator:
+                      _model.numberControllerValidator.asValidator(context),
                 ),
-                style: FlutterFlowTheme.of(context).bodyMedium,
-                validator:
-                    _model.numberControllerValidator.asValidator(context),
               ),
             ),
             Align(
               alignment: AlignmentDirectional(0.0, 0.0),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 25.0, 0.0, 0.0),
-                child: FFButtonWidget(
-                  onPressed: () {
-                    print('BtnLogout pressed ...');
-                  },
-                  text: 'Guardar',
-                  options: FFButtonOptions(
-                    width: 150.0,
-                    height: 44.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: Color(0xFFE00F0F),
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Readex Pro',
-                          fontSize: 15.0,
+                child: StreamBuilder<UsersRecord>(
+                  stream: UsersRecord.getDocument(currentUserReference!),
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
+                          ),
                         ),
-                    elevation: 0.0,
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).lineColor,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(38.0),
-                  ),
-                ).animateOnPageLoad(
-                    animationsMap['buttonOnPageLoadAnimation']!),
+                      );
+                    }
+                    final btnLogoutUsersRecord = snapshot.data!;
+                    return FFButtonWidget(
+                      onPressed: () async {
+                        await currentUserReference!
+                            .update(createUsersRecordData(
+                          email: '',
+                          displayName: '',
+                          photoUrl: '',
+                          uid: '',
+                          phoneNumber: '',
+                          password: '',
+                        ));
+                      },
+                      text: 'Guardar',
+                      options: FFButtonOptions(
+                        width: 150.0,
+                        height: 44.0,
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        iconPadding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: Color(0xFFE00F0F),
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Readex Pro',
+                                  fontSize: 15.0,
+                                ),
+                        elevation: 0.0,
+                        borderSide: BorderSide(
+                          color: FlutterFlowTheme.of(context).lineColor,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(38.0),
+                      ),
+                    ).animateOnPageLoad(
+                        animationsMap['buttonOnPageLoadAnimation']!);
+                  },
+                ),
               ),
             ),
           ],

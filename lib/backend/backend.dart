@@ -9,6 +9,8 @@ import 'schema/users_record.dart';
 import 'schema/products_record.dart';
 import 'schema/categories_record.dart';
 import 'schema/roles_record.dart';
+import 'schema/gallery_record.dart';
+import 'schema/artist_record.dart';
 
 export 'dart:async' show StreamSubscription;
 export 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +22,8 @@ export 'schema/users_record.dart';
 export 'schema/products_record.dart';
 export 'schema/categories_record.dart';
 export 'schema/roles_record.dart';
+export 'schema/gallery_record.dart';
+export 'schema/artist_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Future<int> queryUsersRecordCount({
@@ -164,6 +168,83 @@ Future<List<RolesRecord>> queryRolesRecordOnce({
     queryCollectionOnce(
       RolesRecord.collection,
       RolesRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+/// Functions to query GalleryRecords (as a Stream and as a Future).
+Future<int> queryGalleryRecordCount({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      GalleryRecord.collection,
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<GalleryRecord>> queryGalleryRecord({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      GalleryRecord.collection,
+      GalleryRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<GalleryRecord>> queryGalleryRecordOnce({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      GalleryRecord.collection,
+      GalleryRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+/// Functions to query ArtistRecords (as a Stream and as a Future).
+Future<int> queryArtistRecordCount({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      ArtistRecord.collection(parent),
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<ArtistRecord>> queryArtistRecord({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      ArtistRecord.collection(parent),
+      ArtistRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<ArtistRecord>> queryArtistRecordOnce({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      ArtistRecord.collection(parent),
+      ArtistRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,

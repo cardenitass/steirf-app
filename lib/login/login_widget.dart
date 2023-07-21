@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -291,8 +292,19 @@ class _LoginWidgetState extends State<LoginWidget>
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('BtnLogin pressed ...');
+                          onPressed: () async {
+                            GoRouter.of(context).prepareAuthEvent();
+
+                            final user = await authManager.signInWithEmail(
+                              context,
+                              _model.emailAddressController.text,
+                              _model.passwordController.text,
+                            );
+                            if (user == null) {
+                              return;
+                            }
+
+                            context.goNamedAuth('HomePage', context.mounted);
                           },
                           text: 'Iniciar Sesión',
                           options: FFButtonOptions(
@@ -358,10 +370,19 @@ class _LoginWidgetState extends State<LoginWidget>
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 0.0, 16.0, 24.0),
-                            child: Text(
-                              'O regístrate aquí',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context).labelMedium,
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                context.pushNamed('SignUp');
+                              },
+                              child: Text(
+                                'O regístrate aquí',
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context).labelMedium,
+                              ),
                             ),
                           ),
                         ),

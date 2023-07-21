@@ -247,8 +247,8 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget>
               color: FlutterFlowTheme.of(context).secondaryText,
               size: 30.0,
             ),
-            onPressed: () {
-              print('IconButton pressed ...');
+            onPressed: () async {
+              context.pushNamed('HomePage');
             },
           ),
           actions: [],

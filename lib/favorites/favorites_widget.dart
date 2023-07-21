@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              scaffoldKey.currentState!.openDrawer();
+                              context.pushNamed('HomePage');
                             },
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 0.24,
@@ -103,23 +104,25 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                               ),
                             ),
                           ),
-                          InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              scaffoldKey.currentState!.openDrawer();
-                            },
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.13,
-                              height: MediaQuery.sizeOf(context).width * 0.13,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.asset(
-                                'assets/images/userAvatar.png',
+                          AuthUserStreamWidget(
+                            builder: (context) => InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                scaffoldKey.currentState!.openDrawer();
+                              },
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width * 0.13,
+                                height: MediaQuery.sizeOf(context).width * 0.13,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  currentUserPhoto,
+                                ),
                               ),
                             ),
                           ),
