@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
-import '../flutter_flow_theme.dart';
 import '/backend/backend.dart';
 
 import '../../auth/base_auth_user_provider.dart';
 
-import '../../index.dart';
-import '../../main.dart';
-import '../lat_lng.dart';
-import '../place.dart';
+import '/index.dart';
+import '/main.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/lat_lng.dart';
+import '/flutter_flow/place.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -131,9 +132,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ForgotPasswordWidget(),
         ),
         FFRoute(
-          name: 'ForgotPasswordCode',
-          path: '/forgotPasswordCode',
-          builder: (context, params) => ForgotPasswordCodeWidget(),
+          name: 'ForgotPasswordSent',
+          path: '/forgotPasswordSent',
+          builder: (context, params) => ForgotPasswordSentWidget(),
         ),
         FFRoute(
           name: 'ConfirmPassword',
@@ -144,6 +145,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Products',
           path: '/products',
           builder: (context, params) => ProductsWidget(),
+        ),
+        FFRoute(
+          name: 'getbyid',
+          path: '/getbyid',
+          builder: (context, params) => GetbyidWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -329,7 +335,7 @@ class FFRoute {
                     height: 50.0,
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
+                        FlutterFlowTheme.of(context).xanthous,
                       ),
                     ),
                   ),

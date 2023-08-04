@@ -61,6 +61,11 @@ class UsersRecord extends FirestoreRecord {
   String get password => _password ?? '';
   bool hasPassword() => _password != null;
 
+  // "data" field.
+  DocumentReference? _data;
+  DocumentReference? get data => _data;
+  bool hasData() => _data != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -71,6 +76,7 @@ class UsersRecord extends FirestoreRecord {
     _tokenRecovery = castToType<int>(snapshotData['token_recovery']);
     _role = snapshotData['role'] as DocumentReference?;
     _password = snapshotData['password'] as String?;
+    _data = snapshotData['data'] as DocumentReference?;
   }
 
   static CollectionReference get collection =>
@@ -116,6 +122,7 @@ Map<String, dynamic> createUsersRecordData({
   int? tokenRecovery,
   DocumentReference? role,
   String? password,
+  DocumentReference? data,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -128,6 +135,7 @@ Map<String, dynamic> createUsersRecordData({
       'token_recovery': tokenRecovery,
       'role': role,
       'password': password,
+      'data': data,
     }.withoutNulls,
   );
 
@@ -147,7 +155,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.phoneNumber == e2?.phoneNumber &&
         e1?.tokenRecovery == e2?.tokenRecovery &&
         e1?.role == e2?.role &&
-        e1?.password == e2?.password;
+        e1?.password == e2?.password &&
+        e1?.data == e2?.data;
   }
 
   @override
@@ -160,7 +169,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.phoneNumber,
         e?.tokenRecovery,
         e?.role,
-        e?.password
+        e?.password,
+        e?.data
       ]);
 
   @override

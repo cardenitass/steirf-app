@@ -92,6 +92,8 @@ class _LoginWidgetState extends State<LoginWidget>
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -304,7 +306,7 @@ class _LoginWidgetState extends State<LoginWidget>
                               return;
                             }
 
-                            context.goNamedAuth('HomePage', context.mounted);
+                            context.pushNamedAuth('HomePage', context.mounted);
                           },
                           text: 'Iniciar Sesión',
                           options: FFButtonOptions(

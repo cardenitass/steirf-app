@@ -8,8 +8,9 @@ export '/upload_product/upload_product_widget.dart' show UploadProductWidget;
 export '/favorites/favorites_widget.dart' show FavoritesWidget;
 export '/pages/edit_profile/edit_profile_widget.dart' show EditProfileWidget;
 export '/forgot_password/forgot_password_widget.dart' show ForgotPasswordWidget;
-export '/forgot_password_code/forgot_password_code_widget.dart'
-    show ForgotPasswordCodeWidget;
+export '/forgot_password_sent/forgot_password_sent_widget.dart'
+    show ForgotPasswordSentWidget;
 export '/confirm_password/confirm_password_widget.dart'
     show ConfirmPasswordWidget;
 export '/products/products_widget.dart' show ProductsWidget;
+export '/getbyid/getbyid_widget.dart' show GetbyidWidget;
