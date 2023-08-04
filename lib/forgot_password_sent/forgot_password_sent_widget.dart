@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,19 +7,20 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'forgot_password_model.dart';
-export 'forgot_password_model.dart';
+import 'forgot_password_sent_model.dart';
+export 'forgot_password_sent_model.dart';
 
-class ForgotPasswordWidget extends StatefulWidget {
-  const ForgotPasswordWidget({Key? key}) : super(key: key);
+class ForgotPasswordSentWidget extends StatefulWidget {
+  const ForgotPasswordSentWidget({Key? key}) : super(key: key);
 
   @override
-  _ForgotPasswordWidgetState createState() => _ForgotPasswordWidgetState();
+  _ForgotPasswordSentWidgetState createState() =>
+      _ForgotPasswordSentWidgetState();
 }
 
-class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
+class _ForgotPasswordSentWidgetState extends State<ForgotPasswordSentWidget>
     with TickerProviderStateMixin {
-  late ForgotPasswordModel _model;
+  late ForgotPasswordSentModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -56,27 +56,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ForgotPasswordModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (_model.emailAddressRecoverController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Email required!',
-            ),
-          ),
-        );
-        return;
-      }
-      await authManager.resetPassword(
-        email: _model.emailAddressRecoverController.text,
-        context: context,
-      );
-    });
-
-    _model.emailAddressRecoverController ??= TextEditingController();
+    _model = createModel(context, () => ForgotPasswordSentModel());
   }
 
   @override
@@ -144,7 +124,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              context.safePop();
+                              context.pushNamed('Login');
                             },
                             child: Icon(
                               Icons.arrow_back_rounded,
@@ -154,34 +134,39 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 16.0, 16.0, 0.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                scaffoldKey.currentState!.openDrawer();
-                              },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width * 0.24,
-                                height: MediaQuery.sizeOf(context).width * 0.24,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/Steif_Logo.png',
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 16.0, 16.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () async {
+                                  context.pushNamed('HomePage');
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.24,
+                                  height:
+                                      MediaQuery.sizeOf(context).width * 0.24,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/Steif_Logo.png',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -206,67 +191,9 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
                       Align(
                         alignment: AlignmentDirectional(0.0, -1.0),
                         child: Text(
-                          'Favor ingresar su correo electrónico utilizado para su cuenta de STEIRF para recibir un recordatorio de su contraseña.',
+                          'Tu recordatorio de contraseña ha sido enviado. Favor esperar unos minutos a que llegue a la bandeja de tu correo electrónico.\n\n\nSi tu recordatorio no ha llegado, favor contactar directamente a la siguiente dirección sterif@servicioalcliente.ac.cr',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context).bodyMedium,
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                        child: Container(
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: _model.emailAddressRecoverController,
-                            autofocus: true,
-                            autofillHints: [AutofillHints.email],
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Correo Electrónico',
-                              labelStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).sGBUSGreen,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 24.0, 24.0, 24.0),
-                            ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: _model
-                                .emailAddressRecoverControllerValidator
-                                .asValidator(context),
-                          ),
                         ),
                       ),
                       Align(
@@ -276,26 +203,9 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
                               0.0, 0.0, 0.0, 16.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              if (_model
-                                  .emailAddressRecoverController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Email required!',
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-                              await authManager.resetPassword(
-                                email:
-                                    _model.emailAddressRecoverController.text,
-                                context: context,
-                              );
-
-                              context.pushNamed('ForgotPasswordSent');
+                              context.pushNamed('Login');
                             },
-                            text: 'Enviar',
+                            text: 'Regresar al inicio',
                             options: FFButtonOptions(
                               width: 370.0,
                               height: 44.0,
