@@ -22,7 +22,15 @@
           }
         },
         {
-          "client_id": "206822707826-p0n2cistnhj6bpouq1bpbgkb7bf37m9h.apps.googleusercontent.com",
+          "client_id": "206822707826-gtvnmh2klhuqluti7cns44oif414hiht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ftdigital.steirfapp",
+            "certificate_hash": "f070946a79526ff4d47218ae7e3cebe8989f8a4b"
+          }
+        },
+        {
+          "client_id": "206822707826-q0sg2m3p5a1n0ph18e26mamf9o1r4c5f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
