@@ -12,5 +12,7 @@ export '/forgot_password_sent/forgot_password_sent_widget.dart'
     show ForgotPasswordSentWidget;
 export '/confirm_password/confirm_password_widget.dart'
     show ConfirmPasswordWidget;
-export '/products/products_widget.dart' show ProductsWidget;
+export '/bought_products/bought_products_widget.dart' show BoughtProductsWidget;
 export '/getbyid/getbyid_widget.dart' show GetbyidWidget;
+export '/terms_and_conditions/terms_and_conditions_widget.dart'
+    show TermsAndConditionsWidget;
