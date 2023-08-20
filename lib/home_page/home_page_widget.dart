@@ -1,8 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:styled_divider/styled_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -129,7 +131,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.network(
-                                    currentUserPhoto,
+                                    valueOrDefault<String>(
+                                      currentUserPhoto,
+                                      'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/5anuj059m06n/icono.png',
+                                    ),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -150,69 +155,171 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   child: Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(10.0, 16.0, 10.0, 0.0),
-                    child: Container(
-                      width: double.infinity,
-                      child: TextFormField(
-                        controller: _model.searchBarController,
-                        autofocus: true,
-                        autofillHints: [AutofillHints.email],
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          labelText: 'Explora la galería...',
-                          labelStyle: FlutterFlowTheme.of(context).labelLarge,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).sGBUSGreen,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).alternate,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).alternate,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          filled: true,
-                          fillColor:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          contentPadding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 24.0, 0.0, 24.0),
-                          prefixIcon: Icon(
-                            Icons.search_rounded,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 24.0,
-                          ),
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyLarge,
-                        validator: _model.searchBarControllerValidator
-                            .asValidator(context),
+                    child: StreamBuilder<List<ProductsRecord>>(
+                      stream: queryProductsRecord(
+                        queryBuilder: (productsRecord) => productsRecord.where(
+                            'name',
+                            isEqualTo: _model.searchBarSelectedOption),
                       ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).xanthous,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        List<ProductsRecord> searchBarProductsRecordList =
+                            snapshot.data!;
+                        return Container(
+                          width: double.infinity,
+                          child: Autocomplete<String>(
+                            initialValue: TextEditingValue(),
+                            optionsBuilder: (textEditingValue) {
+                              if (textEditingValue.text == '') {
+                                return const Iterable<String>.empty();
+                              }
+                              return searchBarProductsRecordList
+                                  .map((e) => e.name)
+                                  .toList()
+                                  .where((option) {
+                                final lowercaseOption = option.toLowerCase();
+                                return lowercaseOption.contains(
+                                    textEditingValue.text.toLowerCase());
+                              });
+                            },
+                            optionsViewBuilder: (context, onSelected, options) {
+                              return AutocompleteOptionsList(
+                                textFieldKey: _model.searchBarKey,
+                                textController: _model.searchBarController!,
+                                options: options.toList(),
+                                onSelected: onSelected,
+                                textStyle:
+                                    FlutterFlowTheme.of(context).bodyMedium,
+                                textHighlightStyle: TextStyle(),
+                                elevation: 4.0,
+                                optionBackgroundColor:
+                                    FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                optionHighlightColor:
+                                    FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                maxHeight: 200.0,
+                              );
+                            },
+                            onSelected: (String selection) {
+                              setState(() =>
+                                  _model.searchBarSelectedOption = selection);
+                              FocusScope.of(context).unfocus();
+                            },
+                            fieldViewBuilder: (
+                              context,
+                              textEditingController,
+                              focusNode,
+                              onEditingComplete,
+                            ) {
+                              _model.searchBarController =
+                                  textEditingController;
+                              return TextFormField(
+                                key: _model.searchBarKey,
+                                controller: textEditingController,
+                                focusNode: focusNode,
+                                onEditingComplete: onEditingComplete,
+                                onFieldSubmitted: (_) async {
+                                  await actions.search(
+                                    _model.searchBarController.text,
+                                  );
+                                },
+                                autofocus: true,
+                                autofillHints: [AutofillHints.email],
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  labelText: 'Explora la galería...',
+                                  labelStyle:
+                                      FlutterFlowTheme.of(context).labelLarge,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(40.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .sGBUSGreen,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(40.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(40.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(40.0),
+                                  ),
+                                  filled: true,
+                                  fillColor: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  contentPadding:
+                                      EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 24.0, 0.0, 24.0),
+                                  prefixIcon: Icon(
+                                    Icons.search_rounded,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24.0,
+                                  ),
+                                ),
+                                style: FlutterFlowTheme.of(context).bodyLarge,
+                                validator: _model.searchBarControllerValidator
+                                    .asValidator(context),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 10.0, 0.0),
-                  child: Icon(
-                    Icons.favorite,
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    size: 24.0,
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      setState(() {
+                        _model.searchBarController?.clear();
+                      });
+                      setState(() {
+                        FFAppState().Searching = true;
+                      });
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: FlutterFlowTheme.of(context).secondaryText,
+                      size: 24.0,
+                    ),
                   ),
                 ),
               ],
@@ -274,8 +381,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
                 child: StreamBuilder<List<ProductsRecord>>(
                   stream: queryProductsRecord(
-                    queryBuilder: (productsRecord) =>
-                        productsRecord.orderBy('image'),
+                    queryBuilder: (productsRecord) => productsRecord
+                        .where('name',
+                            isEqualTo: _model.searchBarSelectedOption)
+                        .orderBy('image'),
                   ),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.
@@ -342,15 +451,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               child: Image.network(
-                                                gridViewProductsRecord.image,
-                                                width:
-                                                    MediaQuery.sizeOf(context)
-                                                            .width *
-                                                        1.0,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        1.0,
+                                                valueOrDefault<String>(
+                                                  gridViewProductsRecord.image,
+                                                  'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/9212w4pxg17s/imagen_2023-08-18_120027189.png',
+                                                ),
                                                 fit: BoxFit.contain,
                                               ),
                                             ),
@@ -377,7 +481,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
                                         child: Text(
-                                          gridViewProductsRecord.name,
+                                          valueOrDefault<String>(
+                                            gridViewProductsRecord.name,
+                                            'Art',
+                                          ),
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium

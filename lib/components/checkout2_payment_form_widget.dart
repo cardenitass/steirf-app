@@ -106,8 +106,8 @@ class _Checkout2PaymentFormWidgetState
                           color: FlutterFlowTheme.of(context).secondaryText,
                           size: 24.0,
                         ),
-                        onPressed: () {
-                          print('IconButton pressed ...');
+                        onPressed: () async {
+                          context.safePop();
                         },
                       ),
                     ),

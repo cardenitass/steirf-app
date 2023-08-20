@@ -5,25 +5,25 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'products_model.dart';
-export 'products_model.dart';
+import 'bought_products_model.dart';
+export 'bought_products_model.dart';
 
-class ProductsWidget extends StatefulWidget {
-  const ProductsWidget({Key? key}) : super(key: key);
+class BoughtProductsWidget extends StatefulWidget {
+  const BoughtProductsWidget({Key? key}) : super(key: key);
 
   @override
-  _ProductsWidgetState createState() => _ProductsWidgetState();
+  _BoughtProductsWidgetState createState() => _BoughtProductsWidgetState();
 }
 
-class _ProductsWidgetState extends State<ProductsWidget> {
-  late ProductsModel _model;
+class _BoughtProductsWidgetState extends State<BoughtProductsWidget> {
+  late BoughtProductsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ProductsModel());
+    _model = createModel(context, () => BoughtProductsModel());
   }
 
   @override
@@ -144,7 +144,10 @@ class _ProductsWidgetState extends State<ProductsWidget> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.network(
-                                    currentUserPhoto,
+                                    valueOrDefault<String>(
+                                      currentUserPhoto,
+                                      'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/5anuj059m06n/icono.png',
+                                    ),
                                   ),
                                 ),
                               ),
@@ -249,7 +252,8 @@ class _ProductsWidgetState extends State<ProductsWidget> {
                                                             BorderRadius
                                                                 .circular(8.0),
                                                         child: Image.network(
-                                                          '',
+                                                          gridViewProductsRecord
+                                                              .image,
                                                           fit: BoxFit.contain,
                                                         ),
                                                       ),
@@ -281,7 +285,7 @@ class _ProductsWidgetState extends State<ProductsWidget> {
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
                                         child: Text(
-                                          'Producto',
+                                          gridViewProductsRecord.name,
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium

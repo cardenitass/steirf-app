@@ -408,7 +408,10 @@ class _UploadProductWidgetState extends State<UploadProductWidget>
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: Image.network(
-                              _model.uploadedFileUrl,
+                              valueOrDefault<String>(
+                                _model.uploadedFileUrl,
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/9212w4pxg17s/imagen_2023-08-18_120027189.png',
+                              ),
                               width: 189.0,
                               height: 117.0,
                               fit: BoxFit.cover,

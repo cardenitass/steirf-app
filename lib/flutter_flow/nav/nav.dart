@@ -142,14 +142,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ConfirmPasswordWidget(),
         ),
         FFRoute(
-          name: 'Products',
-          path: '/products',
-          builder: (context, params) => ProductsWidget(),
+          name: 'BoughtProducts',
+          path: '/boughtProducts',
+          builder: (context, params) => BoughtProductsWidget(),
         ),
         FFRoute(
           name: 'getbyid',
           path: '/getbyid',
           builder: (context, params) => GetbyidWidget(),
+        ),
+        FFRoute(
+          name: 'TermsAndConditions',
+          path: '/termsAndConditions',
+          builder: (context, params) => TermsAndConditionsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

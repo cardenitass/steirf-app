@@ -1,9 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
@@ -26,6 +29,13 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => FavoritesModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await actions.search(
+        _model.searchBarController.text,
+      );
+    });
 
     _model.searchBarController ??= TextEditingController();
   }
@@ -176,7 +186,10 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: Image.network(
-                                        currentUserPhoto,
+                                        valueOrDefault<String>(
+                                          currentUserPhoto,
+                                          'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/5anuj059m06n/icono.png',
+                                        ),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -197,87 +210,177 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             10.0, 16.0, 10.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: _model.searchBarController,
-                            onChanged: (_) => EasyDebounce.debounce(
-                              '_model.searchBarController',
-                              Duration(milliseconds: 2000),
-                              () async {
-                                setState(() {
-                                  _model.simpleSearchResults = TextSearch(
-                                    favoritesProductsRecordList
-                                        .map(
-                                          (record) => TextSearchItem(
-                                              record, [record.name!]),
-                                        )
-                                        .toList(),
-                                  )
-                                      .search(_model.searchBarController.text)
-                                      .map((r) => r.object)
-                                      .toList();
-                                  ;
-                                });
-                                setState(() {
-                                  FFAppState().Searching = false;
-                                });
-                              },
-                            ),
-                            autofocus: true,
-                            autofillHints: [AutofillHints.email],
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Busca entre tus favoritos...',
-                              labelStyle:
-                                  FlutterFlowTheme.of(context).labelLarge,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(40.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).sGBUSGreen,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(40.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(40.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(40.0),
-                              ),
-                              filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 24.0, 0.0, 24.0),
-                              prefixIcon: Icon(
-                                Icons.search_rounded,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                size: 24.0,
-                              ),
-                            ),
-                            style: FlutterFlowTheme.of(context).bodyLarge,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: _model.searchBarControllerValidator
-                                .asValidator(context),
+                        child: StreamBuilder<List<ProductsRecord>>(
+                          stream: queryProductsRecord(
+                            queryBuilder: (productsRecord) =>
+                                productsRecord.where('name',
+                                    isEqualTo: _model.searchBarController.text),
                           ),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      FlutterFlowTheme.of(context).xanthous,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            List<ProductsRecord> searchBarProductsRecordList =
+                                snapshot.data!;
+                            return Container(
+                              width: double.infinity,
+                              child: Autocomplete<String>(
+                                initialValue: TextEditingValue(),
+                                optionsBuilder: (textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<String>.empty();
+                                  }
+                                  return favoritesProductsRecordList
+                                      .map((e) => e.name)
+                                      .toList()
+                                      .where((option) {
+                                    final lowercaseOption =
+                                        option.toLowerCase();
+                                    return lowercaseOption.contains(
+                                        textEditingValue.text.toLowerCase());
+                                  });
+                                },
+                                optionsViewBuilder:
+                                    (context, onSelected, options) {
+                                  return AutocompleteOptionsList(
+                                    textFieldKey: _model.searchBarKey,
+                                    textController: _model.searchBarController!,
+                                    options: options.toList(),
+                                    onSelected: onSelected,
+                                    textStyle:
+                                        FlutterFlowTheme.of(context).bodyMedium,
+                                    textHighlightStyle: TextStyle(),
+                                    elevation: 4.0,
+                                    optionBackgroundColor:
+                                        FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                    optionHighlightColor:
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                    maxHeight: 200.0,
+                                  );
+                                },
+                                onSelected: (String selection) {
+                                  setState(() => _model
+                                      .searchBarSelectedOption = selection);
+                                  FocusScope.of(context).unfocus();
+                                },
+                                fieldViewBuilder: (
+                                  context,
+                                  textEditingController,
+                                  focusNode,
+                                  onEditingComplete,
+                                ) {
+                                  _model.searchBarController =
+                                      textEditingController;
+                                  return TextFormField(
+                                    key: _model.searchBarKey,
+                                    controller: textEditingController,
+                                    focusNode: focusNode,
+                                    onEditingComplete: onEditingComplete,
+                                    onChanged: (_) => EasyDebounce.debounce(
+                                      '_model.searchBarController',
+                                      Duration(milliseconds: 2000),
+                                      () async {
+                                        setState(() {
+                                          _model.simpleSearchResults =
+                                              TextSearch(
+                                            favoritesProductsRecordList
+                                                .map(
+                                                  (record) => TextSearchItem(
+                                                      record, [record.name!]),
+                                                )
+                                                .toList(),
+                                          )
+                                                  .search(_model
+                                                      .searchBarController.text)
+                                                  .map((r) => r.object)
+                                                  .toList();
+                                          ;
+                                        });
+                                        setState(() {
+                                          FFAppState().Searching = false;
+                                        });
+                                      },
+                                    ),
+                                    autofocus: true,
+                                    autofillHints: [AutofillHints.email],
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      labelText: 'Busca entre tus favoritos...',
+                                      labelStyle: FlutterFlowTheme.of(context)
+                                          .labelLarge,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .sGBUSGreen,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                      ),
+                                      filled: true,
+                                      fillColor: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      contentPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              24.0, 24.0, 0.0, 24.0),
+                                      prefixIcon: Icon(
+                                        Icons.search_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                    style:
+                                        FlutterFlowTheme.of(context).bodyLarge,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: _model
+                                        .searchBarControllerValidator
+                                        .asValidator(context),
+                                  );
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -374,57 +477,49 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                               ),
                               child: Stack(
                                 children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0x00FFFFFF),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, -1.0),
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child:
-                                                                Image.network(
-                                                              favoritesProductsRecordList[
-                                                                      gridViewAllProductsIndex]
-                                                                  .image,
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                            ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0x00FFFFFF),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Expanded(
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                        child: Image.network(
+                                                          valueOrDefault<
+                                                              String>(
+                                                            favoritesProductsRecordList[
+                                                                    gridViewAllProductsIndex]
+                                                                .image,
+                                                            'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/9212w4pxg17s/imagen_2023-08-18_120027189.png',
                                                           ),
+                                                          fit: BoxFit.contain,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Align(
@@ -442,24 +537,32 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                       ),
                                       child: Stack(
                                         children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Text(
-                                              gridViewAllProductsProductsRecord
-                                                  .name,
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily:
-                                                            'Readex Pro',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Text(
+                                                    gridViewAllProductsProductsRecord
+                                                        .name,
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              'Readex Pro',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           Align(
                                             alignment:

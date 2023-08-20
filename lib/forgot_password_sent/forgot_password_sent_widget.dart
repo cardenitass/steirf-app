@@ -183,10 +183,13 @@ class _ForgotPasswordSentWidgetState extends State<ForgotPasswordSentWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Recuperar Contraseña',
-                        textAlign: TextAlign.start,
-                        style: FlutterFlowTheme.of(context).displaySmall,
+                      Align(
+                        alignment: AlignmentDirectional(0.0, -1.0),
+                        child: Text(
+                          'Recuperar Contraseña',
+                          textAlign: TextAlign.start,
+                          style: FlutterFlowTheme.of(context).displaySmall,
+                        ),
                       ),
                       Align(
                         alignment: AlignmentDirectional(0.0, -1.0),

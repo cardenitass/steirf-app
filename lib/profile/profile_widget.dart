@@ -124,7 +124,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
                               child: CachedNetworkImage(
                                 fadeInDuration: Duration(milliseconds: 500),
                                 fadeOutDuration: Duration(milliseconds: 500),
-                                imageUrl: currentUserPhoto,
+                                imageUrl: valueOrDefault<String>(
+                                  currentUserPhoto,
+                                  'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/steirf-app-w2qoeo/assets/5anuj059m06n/icono.png',
+                                ),
                                 width: 100.0,
                                 height: 100.0,
                                 fit: BoxFit.cover,
@@ -398,7 +401,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
-                  context.pushNamed('Products');
+                  context.pushNamed('BoughtProducts');
                 },
                 child: Container(
                   width: double.infinity,
@@ -538,33 +541,42 @@ class _ProfileWidgetState extends State<ProfileWidget>
                 child: Padding(
                   padding:
                       EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 12.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        Icons.privacy_tip_rounded,
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        size: 24.0,
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-                        child: Text(
-                          'Términos y Condiciones',
-                          style: FlutterFlowTheme.of(context).labelLarge,
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      context.pushNamed('TermsAndConditions');
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.privacy_tip_rounded,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 24.0,
                         ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional(0.9, 0.0),
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 18.0,
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              12.0, 0.0, 0.0, 0.0),
+                          child: Text(
+                            'Términos y Condiciones',
+                            style: FlutterFlowTheme.of(context).labelLarge,
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional(0.9, 0.0),
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 18.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
